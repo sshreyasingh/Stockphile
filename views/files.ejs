@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Files</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      height: 100vh;
+      width: 100vw;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 60px;
+      color: white;
+      background: linear-gradient(
+        to right,
+        #6366f1,
+        #a855f7,
+        #ec4899
+      );
+
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col items-center py-12">
+
+  <!-- Floating Icons -->
+  <div class="absolute top-20 left-10 text-7xl text-white/30 animate-bounce">☁️</div>
+  <div class="absolute bottom-32 right-16 text-7xl text-yellow-300/30 animate-pulse">📂</div>
+  <div class="absolute top-40 right-1/8 text-7xl text-green-300/30 animate-bounce">⬆️</div>
+  <div class="absolute bottom-20 left-1/8 text-7xl text-blue-300/30 animate-pulse">📄</div>
+
+  <!-- Back Button -->
+  <a href="/home"
+     class="fixed top-6 left-6 inline-block px-6 py-3 text-lg font-bold text-white 
+            bg-pink-300 rounded-3xl shadow-lg 
+            transform transition duration-200 hover:scale-110 hover:bg-pink-400">
+    <i class="fa-solid fa-arrow-left"></i> Back
+  </a>
+
+  <!-- Page Title -->
+  <h1 class="text-4xl font-extrabold text-yellow-400 mb-10 drop-shadow-lg">📂 Your Uploaded Files - <%= files.length %></h1>
+ 
+  
+
+  <!-- File List Container (frosted glass effect) -->
+  <ul class="w-full max-w-5xl bg-white/40 backdrop-blur-md rounded-2xl shadow-xl p-8 space-y-6">
+    <% files.forEach(file => { %>
+      <!-- Each File Row -->
+<li class="flex items-center justify-between bg-white/70 rounded-xl shadow p-4 hover:shadow-lg transition">
+
+  <!-- File Name -->
+  <a href="<%= file.url %>" target="_blank" 
+     class="text-lg font-mono text-purple-700 hover:underline flex items-center">
+    <i class="fa-regular fa-file"></i> 
+    <span class="ml-2"><%= file.name %></span>
+  </a>
+
+  <!-- Action Buttons -->
+  <div class="flex space-x-3">
+    <!-- Download -->
+    <a href="/download/<%= file.name %>" 
+       class="px-4 py-2 rounded-lg bg-[#73A6AD] text-white font-medium hover:bg-[#AFD0BF] transition">
+       ⬇ Download
+    </a>
+
+    <!-- Delete -->
+    <form action="/delete/<%= file.name %>" method="POST">
+      <button type="submit" 
+        class="px-4 py-2 rounded-lg bg-[#982649] text-white font-medium hover:bg-red-600 transition">
+        🗑 Delete
+      </button>
+    </form>
+
+    <!-- Show Link in Modal -->
+    <button 
+      onclick="showLinkModal('<%= file.url %>')" 
+      class="px-4 py-2 rounded-lg bg-[#0B5081] text-white font-medium hover:bg-[#6E7DAB] transition">
+      🔗 Show Link
+    </button>
+  </div>
+</li>
+
+
+<!-- Modal (hidden by default) -->
+<div id="linkModal" class="hidden w-full h-full fixed bg-purple-200 inset-0 flex justify-center items-start pt-20 z-50">
+  
+  <div class="bg-yellow-200 rounded-2xl shadow-xl p-6 w-[90%] max-w-lg relative">
+    
+    <!-- Close Button -->
+    <button onclick="closeLinkModal()" 
+      class="absolute top-3 right-3 text-gray-600 hover:text-black text-xl">
+      ✖
+    </button>
+
+    <!-- Modal Content -->
+    <h2 class="text-xl font-bold text-purple-700 mb-4">Sharable Link</h2>
+    <p id="fileLink" class="break-words text-blue-600 underline"></p>
+
+    <!-- Copy Button -->
+    <button 
+      onclick="copyCurrentLink()" 
+      class="mt-4 px-5 py-2 rounded-lg bg-[#73A6AD] text-white font-medium hover:bg-[#5A878D] transition">
+      📋 Copy Link
+    </button>
+  </div>
+</div>
+
+
+<script>
+  let currentLink = "";
+
+  function showLinkModal(link) {
+    currentLink = link;
+    document.getElementById("fileLink").innerText = link;
+    document.getElementById("fileLink").setAttribute("href", link);
+    document.getElementById("linkModal").classList.remove("hidden");
+  }
+
+  function closeLinkModal() {
+    document.getElementById("linkModal").classList.add("hidden");
+  }
+
+  function copyCurrentLink() {
+    navigator.clipboard.writeText(currentLink).then(() => {
+      alert("Sharable link copied!");
+    });
+  }
+
+  function openModal() {
+  document.getElementById("linkModal").classList.remove("hidden");
+  document.body.classList.add("blurred"); // 🔥 Blur everything
+}
+
+
+</script>
+
+      <% }) %>
+  </ul>
+
+</body>
+<!-- <script>
+  function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(() => {
+      alert("Sharable link copied to clipboard!");
+    }).catch(err => {
+      console.error("Failed to copy: ", err);
+    });
+  }
+</script> -->
+
+</html>
