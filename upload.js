@@ -2,7 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
-const { supabase } = require('./supabase'); // path to your supabase client
+const supabaseAdmin  = require('./supabase'); // path to your supabase client
 const jwt = require('jsonwebtoken');
 
 
@@ -43,7 +43,7 @@ router.post('/upload', upload.single('file'), async (req, res) => {
             .getPublicUrl(path);
 
         // Save metadata in Supabase DB
-        const { error: dbError } = await supabase
+        const { error: dbError } = await supabaseAdmin
             .from('files')
             .insert([
                 {

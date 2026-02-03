@@ -9,6 +9,12 @@ const indexRouter=require('./routes/index.routes')
 // middleware/auth.js
 const jwt = require('jsonwebtoken');
 
+// app.use(cors({
+//   origin: ["https://your-frontend.vercel.app"],
+//   credentials: true
+// }));
+
+
 function verifyToken(req, res, next) {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1]; // "Bearer <token>"
@@ -43,6 +49,7 @@ app.use(express.urlencoded({extended:true}))
 app.use('/', indexRouter)
 app.use('/user', userRouter)
 app.use('/upload', require('./upload'));
+
 
 app.listen(3001,()=>{
     console.log('server running');

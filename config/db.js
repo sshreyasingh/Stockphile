@@ -11,5 +11,9 @@ const connectToDB = async () => {
         console.error(' MongoDB Connection Error:', error);
     }
 };
+mongoose.connection.on("connected", () => {
+  console.log("MongoDB Atlas connected");
+});
+
 
 module.exports = connectToDB;
