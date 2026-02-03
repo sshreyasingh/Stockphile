@@ -51,6 +51,7 @@ app.use('/user', userRouter)
 app.use('/upload', require('./upload'));
 
 
-app.listen(3001,()=>{
-    console.log('server running');
-})
+// app.listen(3001,()=>{
+//     console.log('server running');
+// })
+module.exports = app;
