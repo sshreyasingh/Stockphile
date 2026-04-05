@@ -1,5 +1,8 @@
 const mongoose=require('mongoose')
 
+// Mongoose model name "user" → MongoDB collection "users".
+// Database name comes from MONGO_URI (path after host), e.g. ...mongodb.net/mydb?appName=...
+
 const userSchema= new mongoose.Schema({
     username:{
         type:String,

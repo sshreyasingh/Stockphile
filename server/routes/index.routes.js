@@ -35,6 +35,7 @@ const supabase = createClient(
 );
 
 const { verifyToken } = require('../auth');
+const { wantsJson } = require('./http-helpers');
 
 
 
@@ -42,13 +43,16 @@ router.post("/upload", verifyToken, upload.single("file"), async (req, res) => {
   try {
     const file = req.file;
     if (!file) {
-      return res.status(400).json({ error: "No file uploaded" });
+      if (wantsJson(req)) {
+        return res.status(400).json({ error: "No file uploaded" });
+      }
+      return res.status(400).send("No file uploaded");
     }
 
     const userId = req.user.userId;
     const filePath = `uploads/${userId}/${Date.now()}-${file.originalname}`;
 
-    const { data, error } = await supabase.storage
+    const { error } = await supabase.storage
       .from("drive")
       .upload(filePath, file.buffer, {
         contentType: file.mimetype,
@@ -58,12 +62,17 @@ router.post("/upload", verifyToken, upload.single("file"), async (req, res) => {
     if (error) throw error;
     console.log(userId);
 
-    // res.json({ message: "File uploaded successfully", data });
+    if (wantsJson(req)) {
+      return res.json({ message: "File uploaded successfully" });
+    }
+    return res.redirect("/files");
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error(err);
+    if (wantsJson(req)) {
+      return res.status(500).json({ error: err.message });
+    }
+    return res.status(500).send(err.message || "Upload failed");
   }
- res.redirect('/files');
-  
 });
 
 // Download a file
@@ -113,37 +122,50 @@ router.post("/delete/:filename", verifyToken, async (req, res) => {
 
 
 
+async function listUserFiles(userId) {
+  const { data, error } = await supabase.storage.from("drive").list(`uploads/${userId}`, {
+    limit: 100,
+    sortBy: { column: "created_at", order: "desc" },
+  });
+  if (error) throw error;
+  return data.map((file) => {
+    const { data: publicUrlData } = supabase.storage
+      .from("drive")
+      .getPublicUrl(`uploads/${userId}/${file.name}`);
+    return { name: file.name, url: publicUrlData.publicUrl };
+  });
+}
+
+router.get("/api/my-files", verifyToken, async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    if (!userId) return res.status(400).json({ error: "User ID not found" });
+    const files = await listUserFiles(userId);
+    res.json({ files });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
 router.get("/files", verifyToken, async (req, res) => {
   try {
     const userId = req.user.userId; // from JWT
     if (!userId) return res.status(400).json({ error: "User ID not found" });
 
-    // List files from this user's folder
-    const { data, error } = await supabase.storage
-      .from("drive") // your Supabase bucket name
-      .list(`uploads/${userId}`, {
-        limit: 100, // optional
-        sortBy: { column: "created_at", order: "desc" }
-      });
+    const filesWithUrls = await listUserFiles(userId);
 
-    if (error) throw error;
-
-    // Generate public URLs for each file
-    const filesWithUrls = data.map(file => {
-      const { data: publicUrlData } = supabase.storage
-        .from("drive")
-        .getPublicUrl(`uploads/${userId}/${file.name}`);
-
-      return {
-        name: file.name,
-        url: publicUrlData.publicUrl
-      };
-    });
+    if (wantsJson(req)) {
+      return res.json({ files: filesWithUrls });
+    }
 
     res.render("files", { files: filesWithUrls }); // EJS template
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: err.message });
+    if (wantsJson(req)) {
+      return res.status(500).json({ error: err.message });
+    }
+    return res.status(500).send(err.message || "Error loading files");
   }
 });
 

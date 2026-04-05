@@ -12,7 +12,9 @@ export default defineConfig({
     proxy: {
       "/api": "http://localhost:3001",
       "/user": "http://localhost:3001",
-      "/upload": "http://localhost:3001"
+      "/upload": "http://localhost:3001",
+      "/download": "http://localhost:3001",
+      "/delete": "http://localhost:3001",
     }
   }
 });
