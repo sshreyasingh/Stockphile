@@ -2,7 +2,7 @@
   "version": 2,
   "builds": [
     {
-      "src": "api/**/*.js",
+      "src": "api/index.js",
       "use": "@vercel/node"
     },
     {
@@ -12,14 +12,15 @@
     }
   ],
   "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "api/$1"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/client/dist/index.html"
-    }
-    
+    { "handle": "filesystem" },
+    { "src": "/user/(.*)", "dest": "/api/index.js" },
+    { "src": "/upload(.*)", "dest": "/api/index.js" },
+    { "src": "/api/files/(.*)", "dest": "/api/index.js" },
+    { "src": "/home", "dest": "/api/index.js" },
+    { "src": "/files", "dest": "/api/index.js" },
+    { "src": "/test-supabase", "dest": "/api/index.js" },
+    { "src": "/download/(.*)", "dest": "/api/index.js" },
+    { "src": "/delete/(.*)", "dest": "/api/index.js" },
+    { "src": "/(.*)", "dest": "/index.html" }
   ]
 }

@@ -27,7 +27,7 @@ router.post('/upload', upload.single('file'), async (req, res) => {
         const path = `${userId}/${Date.now()}-${file.originalname}`;
 
         // Upload to Supabase Storage
-        const { error: uploadError } = await supabase
+        const { error: uploadError } = await supabaseAdmin
             .storage
             .from('drive')
             .upload(path, file.buffer, {
@@ -37,7 +37,7 @@ router.post('/upload', upload.single('file'), async (req, res) => {
         if (uploadError) throw uploadError;
 
         // Get Public URL
-        const { data: { publicUrl } } = supabase
+        const { data: { publicUrl } } = supabaseAdmin
             .storage
             .from('drive')
             .getPublicUrl(path);

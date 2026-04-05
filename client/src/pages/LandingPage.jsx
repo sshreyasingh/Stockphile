@@ -72,13 +72,13 @@ export default function LandingPage() {
 
       <div className="flex space-x-6 relative z-10">
         <a
-          href="http://localhost:3001/user/login"
+          href="/user/login"
           className="px-6 py-3 bg-white text-indigo-600 rounded-2xl shadow-lg hover:scale-105 transition"
         >
           Login
         </a>
         <a
-          href="http://localhost:3001/user/register"
+          href="/user/register"
           className="px-6 py-3 bg-white text-indigo-600 rounded-2xl shadow-lg hover:scale-105 transition"
         >
           Register

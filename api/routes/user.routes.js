@@ -13,6 +13,7 @@ require('dotenv').config();
 
 const jwtt = require('jsonwebtoken');
 
+
 function verifyToken(req, res, next) {
   const token = req.headers.authorization?.split(' ')[1];
   if (!token) return res.status(401).json({ error: 'Access denied' });
@@ -24,14 +25,10 @@ function verifyToken(req, res, next) {
   });
 }
 
-module.exports = { verifyToken };
-
-const { supabaseClient } = require('../supabase');
-
 router.get('/files', verifyToken, async (req, res) => {
   try {
     const userId = req.user.id; // ✅ comes from decoded JWT
-    const { data, error } = await supabaseClient
+    const { data, error } = await supabase
       .storage
       .from('drive')
       .list(`uploads/${userId}`); // ✅ folder named after user
