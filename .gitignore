@@ -1,3 +1,6 @@
+# Vite production output (served from /public on Vercel)
+public/
+
 # Dependencies
 node_modules/
 

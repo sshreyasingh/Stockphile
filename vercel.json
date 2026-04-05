@@ -1,26 +1,5 @@
 {
-  "version": 2,
-  "builds": [
-    {
-      "src": "api/index.js",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "client/package.json",
-      "use": "@vercel/static-build",
-      "config": { "distDir": "dist" }
-    }
-  ],
-  "routes": [
-    { "handle": "filesystem" },
-    { "src": "/user/(.*)", "dest": "/api/index.js" },
-    { "src": "/upload(.*)", "dest": "/api/index.js" },
-    { "src": "/api/files/(.*)", "dest": "/api/index.js" },
-    { "src": "/home", "dest": "/api/index.js" },
-    { "src": "/files", "dest": "/api/index.js" },
-    { "src": "/test-supabase", "dest": "/api/index.js" },
-    { "src": "/download/(.*)", "dest": "/api/index.js" },
-    { "src": "/delete/(.*)", "dest": "/api/index.js" },
-    { "src": "/(.*)", "dest": "/index.html" }
-  ]
+  "framework": null,
+  "installCommand": "npm install && npm install --prefix client",
+  "buildCommand": "npm run build"
 }

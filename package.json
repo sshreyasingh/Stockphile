@@ -2,10 +2,12 @@
   "name": "drive",
   "private": true,
   "version": "1.0.0",
+  "main": "index.js",
   "description": "Monorepo root for Vercel — API dependencies resolve from here.",
   "scripts": {
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "server": "node api/server.js",
+    "build": "npm run build --prefix client",
+    "server": "node server/server.js",
     "client": "npm run dev --prefix client"
   },
   "dependencies": {
