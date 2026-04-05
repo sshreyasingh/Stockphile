@@ -60,131 +60,160 @@ router.get('/register', (req, res) => {
 });
 
 
-router.post(
-  '/register',
+// router.post(
+//   '/register',
 
-  body('email').trim().isEmail(),
-  body('password').trim().isLength({ min: 5 }),
-  body('username').trim().isLength({ min: 3 }),
+//   body('email').trim().isEmail(),
+//   body('password').trim().isLength({ min: 5 }),
+//   body('username').trim().isLength({ min: 3 }),
 
-  async (req, res) => {
+//   async (req, res) => {
 
-    console.log("Incoming Register Data:", req.body); // 🔍 DEBUG
+//     console.log("Incoming Register Data:", req.body); // 🔍 DEBUG
 
-    const errors = validationResult(req);
+//     const errors = validationResult(req);
 
-    if (!errors.isEmpty()) {
-      return redirectAuthError(
-        res,
-        '/user/register',
-        'Please check your email, username, and password.'
-      );
-    }
+//     if (!errors.isEmpty()) {
+//       return redirectAuthError(
+//         res,
+//         '/user/register',
+//         'Please check your email, username, and password.'
+//       );
+//     }
 
-    const { email, username, password } = req.body;
+//     const { email, username, password } = req.body;
 
-    if (mongoose.connection.readyState !== 1) {
+//     if (mongoose.connection.readyState !== 1) {
 
-      console.error(
-        'MongoDB NOT connected. readyState=',
-        mongoose.connection.readyState
-      );
+//       console.error(
+//         'MongoDB NOT connected. readyState=',
+//         mongoose.connection.readyState
+//       );
 
-      return redirectAuthError(
-        res,
-        '/user/register',
-        'Database unavailable.'
-      );
-    }
+//       return redirectAuthError(
+//         res,
+//         '/user/register',
+//         'Database unavailable.'
+//       );
+//     }
 
-    if (!process.env.JWT_SECRET) {
-      return redirectAuthError(
-        res,
-        '/user/register',
-        'JWT_SECRET missing.'
-      );
-    }
+//     if (!process.env.JWT_SECRET) {
+//       return redirectAuthError(
+//         res,
+//         '/user/register',
+//         'JWT_SECRET missing.'
+//       );
+//     }
 
-    try {
+//     try {
 
-      /* HASH PASSWORD */
-      const hashPass = await bcrypt.hash(password, 10);
+//       /* HASH PASSWORD */
+//       const hashPass = await bcrypt.hash(password, 10);
 
-      /* SAVE USER TO MONGODB */
-      const newUser = await User.create({
-        email,
-        username,
-        password: hashPass
-      });
+//       /* SAVE USER TO MONGODB */
+//       const newUser = await User.create({
+//         email,
+//         username,
+//         password: hashPass
+//       });
 
-      console.log("User Saved To MongoDB:", newUser); // 🔍 DEBUG
+//       console.log("User Saved To MongoDB:", newUser); // 🔍 DEBUG
 
-      /* SUPABASE SIGNUP (Optional) */
+//       /* SUPABASE SIGNUP (Optional) */
 
-      try {
+//       try {
 
-        const { error: supaErr } =
-          await supabase.auth.signUp({
-            email,
-            password,
-            options: { data: { username } }
-          });
+//         const { error: supaErr } =
+//           await supabase.auth.signUp({
+//             email,
+//             password,
+//             options: { data: { username } }
+//           });
 
-        if (supaErr) {
-          console.error(
-            'Supabase signUp error:',
-            supaErr.message
-          );
-        }
+//         if (supaErr) {
+//           console.error(
+//             'Supabase signUp error:',
+//             supaErr.message
+//           );
+//         }
 
-      } catch (supaEx) {
-        console.error(
-          'Supabase exception:',
-          supaEx.message || supaEx
-        );
-      }
+//       } catch (supaEx) {
+//         console.error(
+//           'Supabase exception:',
+//           supaEx.message || supaEx
+//         );
+//       }
 
-      /* JWT TOKEN */
+//       /* JWT TOKEN */
 
-      const token = jwt.sign(
-        {
-          userId: newUser._id,
-          email: newUser.email
-        },
-        process.env.JWT_SECRET,
-        { expiresIn: '1d' }
-      );
+//       const token = jwt.sign(
+//         {
+//           userId: newUser._id,
+//           email: newUser.email
+//         },
+//         process.env.JWT_SECRET,
+//         { expiresIn: '1d' }
+//       );
 
-      res.cookie("token", token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: 'lax',
-      });
+//       res.cookie("token", token, {
+//         httpOnly: true,
+//         secure: process.env.NODE_ENV === "production",
+//         sameSite: 'lax',
+//       });
 
-      res.redirect('/home');
+//       res.redirect('/home');
 
-    }
+//     }
 
-    catch (err) {
+//     catch (err) {
 
-      console.error('Register error:', err);
+//       console.error('Register error:', err);
 
-      const msg =
-        err.code === 11000
-          ? 'Email or username already exists.'
-          : (err.message || 'Registration failed.');
+//       const msg =
+//         err.code === 11000
+//           ? 'Email or username already exists.'
+//           : (err.message || 'Registration failed.');
 
-      return redirectAuthError(
-        res,
-        '/user/register',
-        msg
-      );
-    }
+//       return redirectAuthError(
+//         res,
+//         '/user/register',
+//         msg
+//       );
+//     }
 
+//   }
+// );
+
+router.post('/register', async (req,res)=>{
+
+  console.log("REGISTER ROUTE HIT"); // 🔥 ADD THIS
+  console.log("BODY:", req.body); // 🔥 ADD THIS
+  
+  const {email,username,password} = req.body;
+  
+  try {
+  
+  const hashPass = await bcrypt.hash(password,10);
+  
+  const newUser = await User.create({
+      email,
+      username,
+      password: hashPass
+  });
+  
+  console.log("USER SAVED:", newUser); // 🔥 ADD THIS
+  
+  res.redirect('/home');
+  
+  } catch (err) {
+  
+  console.error("REGISTER ERROR:", err); // 🔥 ADD THIS
+  
+  res.send("Error saving user");
+  
   }
-);
-
-
+  
+  });
 
 /* ================= LOGIN ================= */
 
