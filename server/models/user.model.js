@@ -1,7 +1,8 @@
 const mongoose=require('mongoose')
 
-// Mongoose model name "user" → MongoDB collection "users".
-// Database name comes from MONGO_URI (path after host), e.g. ...mongodb.net/mydb?appName=...
+// Use your Atlas collection name exactly: "user" (not Mongoose's default "users").
+// Database name = segment in MONGO_URI after the host, e.g.
+// mongodb+srv://...@cluster0.xxxxx.mongodb.net/stockphile?retryWrites=true&w=majority
 
 const userSchema= new mongoose.Schema({
     username:{
@@ -18,17 +19,15 @@ const userSchema= new mongoose.Schema({
         trim:true,
         lowercase:true,
         unique:true,
-        minlength:[13,'email must be atleast 13 characters long']
+        minlength:[5,'email is too short']
     },
     password:{
          type:String,
         required:true,
         trim:true,
-        // lowercase:true,
-        // unique:true,
         minlength:[5,'password must be atleast 5 characters long']
     }
-})
+}, { collection: 'user' })
 
 const User=mongoose.model('user',userSchema)
 
