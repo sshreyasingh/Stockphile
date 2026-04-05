@@ -18,6 +18,7 @@ const fileRoutes = require("./upload");
 app.use("/api/files", fileRoutes);
 
 app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

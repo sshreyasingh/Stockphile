@@ -17,13 +17,13 @@ const upload = multer({ storage: storage });
 
 router.get('/home', (req, res) => {
   const token = req.cookies.token;
-  if (!token) return res.redirect('/login');
+  if (!token) return res.redirect('/user/login');
 //   const decoded = jwt.verify(token, process.env.JWT_SECRET);
 let decoded;
 try {
   decoded = jwt.verify(token, process.env.JWT_SECRET);
 } catch (err) {
-  return res.redirect('/login');
+  return res.redirect('/user/login');
 }
 
   res.render('home', { userId: decoded.userId });

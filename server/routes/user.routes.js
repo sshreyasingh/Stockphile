@@ -10,8 +10,11 @@ const upload=multer;
 
 require('dotenv').config();
 
-
 const jwtt = require('jsonwebtoken');
+
+function redirectAuthError(res, path, message) {
+  return res.redirect(`${path}?error=${encodeURIComponent(message)}`);
+}
 
 
 function verifyToken(req, res, next) {
@@ -56,23 +59,15 @@ router.post('/register',
 
     const errors= validationResult(req);
     if(!errors.isEmpty()){
-        return res.status(400).json({
-            errors: errors.array(),
-            message:'Invalid data'
-        })
+        return redirectAuthError(res, '/user/register', 'Please check your email, username, and password.');
     }
     const{email,username,password}=req.body;
-    
+
+    try {
     const hashPass=await bcrypt.hash(password,10)
     const newUser= await userModel.create({
         email,username,password:hashPass
     })
-//     const newUser = new User({
-//     name,
-//     email,
-//     supabaseId: data.user.id // store Supabase user ID
-//   });
-//   await newUser.save();
     await supabase.auth.signUp({
             email,
             password,
@@ -81,9 +76,6 @@ router.post('/register',
             }
         });
 
-    // res.json(newUser);
-
-    
 const token = jwt.sign(
   { userId: newUser._id, email: newUser.email }, // Include user ID
   process.env.JWT_SECRET,
@@ -92,11 +84,17 @@ const token = jwt.sign(
 
      res.cookie("token", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production"
+      secure: process.env.NODE_ENV === "production",
+      sameSite: 'lax',
     });
-    // console.log(req.body);
-    // res.send('user registered');
     res.redirect('/home');
+    } catch (err) {
+      console.error(err);
+      const msg = err.code === 11000
+        ? 'That email or username is already registered.'
+        : (err.message || 'Registration failed. Please try again.');
+      return redirectAuthError(res, '/user/register', msg);
+    }
 
 
 })
@@ -112,10 +110,7 @@ router.post('/login',
     async (req,res)=>{
         const errors=validationResult(req);
         if(!errors.isEmpty()){
-            return res.status(400).json({
-                error:errors.array(),
-                message:'Invalid Data'
-            })
+            return redirectAuthError(res, '/user/login', 'Please enter a valid username and password.');
         }
         const {username,password}=req.body;
         const user=await userModel.findOne({
@@ -123,15 +118,11 @@ router.post('/login',
         })
         console.log(user);
        if(!user){
-        return res.status(400).json({
-            message:'username or password is incorrect'
-        });
+        return redirectAuthError(res, '/user/login', 'Username or password is incorrect.');
        }
        const isMatch=await bcrypt.compare(password,user.password)
        if(!isMatch){
-           return res.status(400).json({
-           message:'username or password is incorrect'
-           });
+           return redirectAuthError(res, '/user/login', 'Username or password is incorrect.');
        }
        const token=jwt.sign({
         userId:user._id,
@@ -140,10 +131,11 @@ router.post('/login',
        },
         process.env.JWT_SECRET  
     );
-   res.cookie('token',token)
-   // After MongoDB password match is confirmed:
-
-//    res.send('logged in')
+   res.cookie('token', token, {
+     httpOnly: true,
+     secure: process.env.NODE_ENV === 'production',
+     sameSite: 'lax',
+   });
  res.redirect('/home');
 //   res.json({ token });
 // console.log(token)
