@@ -2,14 +2,42 @@
   "version": 2,
   "builds": [
     {
+      "src": "client/package.json",
+      "use": "@vitejs/vite"
+    },
+    {
       "src": "server/index.js",
       "use": "@vercel/node"
     }
   ],
   "routes": [
     {
-      "src": "/(.*)",
-      "dest": "server/index.js"
+      "src": "/api/(.*)",
+      "dest": "/server/index.js"
+    },
+    {
+      "src": "/user/(.*)",
+      "dest": "/server/index.js"
+    },
+    {
+      "src": "/upload/(.*)",
+      "dest": "/server/index.js"
+    },
+    {
+      "src": "/download/(.*)",
+      "dest": "/server/index.js"
+    },
+    {
+      "src": "/files(.*)",
+      "dest": "/server/index.js"
+    },
+    {
+      "src": "/home",
+      "dest": "/server/index.js"
+    },
+    {
+      "src": "/((?!api|user|upload|download|files|home).*)",
+      "dest": "/public/index.html"
     }
   ]
 }
