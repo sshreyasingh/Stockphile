@@ -37,3 +37,6 @@ mongoose.connection.on('error', (err) => {
 });
 
 module.exports = connectToDB;
+
+console.log("Mongo URI exists:", !!process.env.MONGO_URI);
+console.log("Connecting to MongoDB...");
