@@ -10,12 +10,6 @@ const cookieParser = require("cookie-parser");
 
 connectToDB();
 
-/* ROUTERS */
-
-const indexRouter = require("./routes/index.routes");
-const userRouter = require("./routes/user.routes");
-const uploadRouter = require("./upload");
-
 /* VIEW ENGINE */
 
 app.set("view engine", "ejs");
@@ -31,6 +25,24 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+/* STATIC FIRST */
+
+const staticPath =
+  path.join(__dirname, "../client");
+
+app.use(express.static(staticPath));
+
+/* ROUTERS */
+
+const indexRouter =
+  require("./routes/index.routes");
+
+const userRouter =
+  require("./routes/user.routes");
+
+const uploadRouter =
+  require("./upload");
+
 /* ROUTES */
 
 app.use("/", indexRouter);
@@ -38,12 +50,5 @@ app.use("/", indexRouter);
 app.use("/user", userRouter);
 
 app.use("/", uploadRouter);
-
-/* STATIC FILES (client folder) */
-
-const staticPath =
-  path.join(__dirname, "../client");
-
-app.use(express.static(staticPath));
 
 module.exports = app;
