@@ -14,12 +14,16 @@ connectToDB();
 
 const indexRouter = require("./routes/index.routes");
 const userRouter = require("./routes/user.routes");
-const uploadRouter = require("./upload"); // ✅ NOT inside routes
+const uploadRouter = require("./upload");
 
 /* VIEW ENGINE */
 
 app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "views"));
+
+app.set(
+  "views",
+  path.join(__dirname, "views")
+);
 
 /* MIDDLEWARE */
 
@@ -33,15 +37,13 @@ app.use("/", indexRouter);
 
 app.use("/user", userRouter);
 
-/* Upload routes */
+app.use("/", uploadRouter);
 
-app.use("/", uploadRouter);  
-// So /home /upload /files work
+/* STATIC FILES (client folder) */
 
-/* STATIC */
+const staticPath =
+  path.join(__dirname, "../client");
 
-const distPath = path.join(__dirname, "../public");
-
-app.use(express.static(distPath));
+app.use(express.static(staticPath));
 
 module.exports = app;
