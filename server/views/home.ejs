@@ -153,7 +153,7 @@
     try {
       setBoth("⏳ Uploading...", "text-blue-600");
 
-      const res = await fetch("http://localhost:3001/upload", {
+      const res = await fetch("/upload", {
         method: "POST",
         body: formData,
         // credentials: "include", // uncomment if your server uses cookies/sessions
