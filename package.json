@@ -1,1 +1,37 @@
-{"name":"drive","private":true,"version":"1.0.0","main":"index.js","description":"Monorepo root for Vercel — API dependencies resolve from here.","scripts":{"dev":"concurrently \"npm run server\" \"npm run client\"","build":"npm run build --prefix client","server":"node index.js","client":"npm run dev --prefix client"},"dependencies":{"@supabase/supabase-js":"^2.54.0","bcrypt":"^6.0.0","cookie-parser":"^1.4.7","dotenv":"^17.2.1","ejs":"^3.1.10","express":"^4.21.2","express-validator":"^7.2.1","jsonwebtoken":"^9.0.2","mongoose":"^8.16.4","multer":"^2.0.2"},"devDependencies":{"concurrently":"^9.1.2"}}
+{
+  "name": "drive",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Monorepo root for React + Express + EJS deployment",
+  "main": "server/index.js",
+
+  "scripts": {
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+
+    "server": "nodemon server/index.js",
+
+    "client": "npm run dev --prefix client",
+
+    "build": "npm install --prefix client && npm run build --prefix client",
+
+    "start": "node server/index.js"
+  },
+
+  "dependencies": {
+    "@supabase/supabase-js": "^2.54.0",
+    "bcrypt": "^6.0.0",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^17.2.1",
+    "ejs": "^3.1.10",
+    "express": "^4.21.2",
+    "express-validator": "^7.2.1",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.16.4",
+    "multer": "^2.0.2"
+  },
+
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "nodemon": "^3.1.0"
+  }
+}
