@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FaCloud, FaLock, FaRocket, FaUsers } from "react-icons/fa";
 
@@ -87,9 +88,12 @@ const AboutPage = () => {
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.95 }}
           className="mt-6 px-6 py-3 bg-purple-600 text-white font-semibold rounded-full border-[5px] border-white shadow-lg hover:bg-purple-700 transition"
-        ><a href="http://localhost:5173/" class="text-white ">
-    🚀 Get Started
-  </a>
+        > <Link
+            to="/"   
+            className="px-6 py-3 bg-purple-600 text-white font-semibold rounded-full border-[5px] border-white shadow-lg hover:bg-purple-700 transition inline-block"
+          >
+            🚀 Get Started
+          </Link>
         </motion.button>
       </motion.div>
     </div>

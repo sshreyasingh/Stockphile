@@ -31,7 +31,7 @@ try {
 
 const supabase = createClient(
   process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE
+  process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
 const { verifyToken } = require('../auth');
@@ -118,6 +118,16 @@ router.post("/delete/:filename", verifyToken, async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+
+router.get("/", (req, res) => {
+
+  console.log("ROOT HIT");
+
+  // Always redirect to login first
+  res.redirect("/user/login");
+
+});
+
 
 
 

@@ -3,7 +3,7 @@ require('dotenv').config();
 
 // Load from environment variables (NEVER hardcode keys)
 const supabaseUrl = process.env.SUPABASE_URL;
-const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE; // 🔑 service role
+const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY; // 🔑 service role
 
 console.log("✅ Supabase URL:", supabaseUrl);
 console.log("✅ Service role key loaded?", !!serviceRoleKey);

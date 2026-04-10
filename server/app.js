@@ -27,10 +27,7 @@ app.use(express.urlencoded({ extended: true }));
 
 /* STATIC FIRST */
 
-const staticPath =
-  path.join(__dirname, "../client");
 
-app.use(express.static(staticPath));
 
 /* ROUTERS */
 
@@ -50,5 +47,10 @@ app.use("/", indexRouter);
 app.use("/user", userRouter);
 
 app.use("/", uploadRouter);
+
+const staticPath =
+  path.join(__dirname, "../client");
+
+app.use(express.static(staticPath));
 
 module.exports = app;
