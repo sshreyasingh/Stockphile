@@ -104,16 +104,17 @@ const uploadRouter =
 /* ROUTES */
 
 // app.use("/", indexRouter);
-
-app.use("/user", userRouter);
-
-app.use("/", uploadRouter);
-
 router.get("/", (req, res) => {
   res.sendFile(
     path.join(__dirname, "../../client/dist/index.html")
   );
 });
+
+app.use("/user", userRouter);
+
+app.use("/", uploadRouter);
+
+
 
 const staticPath =
   path.join(__dirname, "../client/dist");
