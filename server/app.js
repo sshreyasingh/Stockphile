@@ -25,12 +25,9 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-/* STATIC FILES */
+/* STATIC FIRST */
 
-const staticPath =
-  path.join(__dirname, "../client");
 
-app.use(express.static(staticPath));
 
 /* ROUTERS */
 
@@ -51,12 +48,9 @@ app.use("/user", userRouter);
 
 app.use("/", uploadRouter);
 
-/* REACT FALLBACK (VERY IMPORTANT) */
+const staticPath =
+  path.join(__dirname, "../client");
 
-app.get("*", (req, res) => {
-  res.sendFile(
-    path.join(staticPath, "index.html")
-  );
-});
+app.use(express.static(staticPath));
 
 module.exports = app;
