@@ -62,7 +62,7 @@
 </button>
 
 <!-- Rectangular Go to Files Button -->
-<a href="/files"
+<a href="/user/files"
 onclick="window.location.href='/files'; return false;"
   class="mt-[90px] bg-blue-300 hover:bg-blue-400 text-white font-bold text-2xl py-6 px-20 rounded-3xl shadow-lg 
          transform transition-transform duration-200 hover:scale-110">
@@ -154,7 +154,7 @@ onclick="window.location.href='/files'; return false;"
     try {
       setBoth("⏳ Uploading...", "text-blue-600");
 
-      const res = await fetch("/files", {
+      const res = await fetch("/user/files", {
         method: "POST",
         body: formData,
         // credentials: "include", // uncomment if your server uses cookies/sessions
