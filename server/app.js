@@ -53,4 +53,4 @@ const staticPath =
 
 app.use(express.static(staticPath));
 
-module.exports = app;
+module.exports = app; 
