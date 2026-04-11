@@ -1,0 +1,1 @@
+# Fix Vercel Deployment: React LandingPage at Root\n\n✅ 1. Built client → public/\n- [ ] 2. server/app.js: static('public') BEFORE routers\n- [ ] 3. server/routes/index.routes.js: Remove GET / redirect\n- [ ] 4. vercel.json: Frontend build + rewrites\n- [ ] 5. Test locally\n- [ ] 6. vercel deploy\n\nCurrent dir: root. Backend unchanged - /home /files /upload work.
