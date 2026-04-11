@@ -18,38 +18,38 @@ function redirectAuthError(res, path, message) {
   return res.redirect(`${path}?error=${encodeURIComponent(message)}`);
 }
 
-function verifyToken(req, res, next) {
-  const token = req.headers.authorization?.split(' ')[1];
+// function verifyToken(req, res, next) {
+//   const token = req.headers.authorization?.split(' ')[1];
 
-  if (!token)
-    return res.status(401).json({ error: 'Access denied' });
+//   if (!token)
+//     return res.status(401).json({ error: 'Access denied' });
 
-  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-    if (err)
-      return res.status(403).json({ error: 'Invalid token' });
+//   jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+//     if (err)
+//       return res.status(403).json({ error: 'Invalid token' });
 
-    req.user = decoded;
-    next();
-  });
-}
+//     req.user = decoded;
+//     next();
+//   });
+// }
 
-router.get('/files', verifyToken, async (req, res) => {
-  try {
-    const userId = req.user.userId || req.user.id;
+// router.get('/files', verifyToken, async (req, res) => {
+//   try {
+//     const userId = req.user.userId || req.user.id;
 
-    const { data, error } = await supabase
-      .storage
-      .from('drive')
-      .list(`uploads/${userId}`);
+//     const { data, error } = await supabase
+//       .storage
+//       .from('drive')
+//       .list(`uploads/${userId}`);
 
-    if (error) throw error;
+//     if (error) throw error;
 
-    res.json({ files: data });
+//     res.json({ files: data });
 
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+//   } catch (err) {
+//     res.status(500).json({ error: err.message });
+//   }
+// });
 
 
 
