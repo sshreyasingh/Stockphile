@@ -1,3 +1,60 @@
+// const path = require("path");
+// const express = require("express");
+// const app = express();
+// const dotenv = require("dotenv");
+
+// dotenv.config();
+
+// const connectToDB = require("./config/db");
+// const cookieParser = require("cookie-parser");
+
+// connectToDB();
+
+// /* VIEW ENGINE */
+
+// app.set("view engine", "ejs");
+
+// app.set(
+//   "views",
+//   path.join(__dirname, "views")
+// );
+
+// /* MIDDLEWARE */
+
+// app.use(cookieParser());
+// app.use(express.json());
+// app.use(express.urlencoded({ extended: true }));
+
+// /* STATIC FIRST */
+
+
+
+// /* ROUTERS */
+
+// const indexRouter =
+//   require("./routes/index.routes");
+
+// const userRouter =
+//   require("./routes/user.routes");
+
+// const uploadRouter =
+//   require("./upload");
+
+// /* ROUTES */
+
+// app.use("/", indexRouter);
+
+// app.use("/user", userRouter);
+
+// app.use("/", uploadRouter);
+
+// const staticPath =
+//   path.join(__dirname, "../client");
+
+// app.use(express.static(staticPath));
+
+// module.exports = app; 
+
 const path = require("path");
 const express = require("express");
 const app = express();
@@ -27,7 +84,11 @@ app.use(express.urlencoded({ extended: true }));
 
 /* STATIC FIRST */
 
-
+app.get("/", (req, res) => {
+  res.sendFile(
+    path.join(__dirname, "../client/dist/index.html")
+  );
+});
 
 /* ROUTERS */
 
@@ -42,14 +103,20 @@ const uploadRouter =
 
 /* ROUTES */
 
-app.use("/", indexRouter);
+// app.use("/", indexRouter);
 
 app.use("/user", userRouter);
 
 app.use("/", uploadRouter);
 
+router.get("/", (req, res) => {
+  res.sendFile(
+    path.join(__dirname, "../../client/dist/index.html")
+  );
+});
+
 const staticPath =
-  path.join(__dirname, "../client");
+  path.join(__dirname, "../client/dist");
 
 app.use(express.static(staticPath));
 
