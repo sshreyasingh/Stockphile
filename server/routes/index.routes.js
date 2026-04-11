@@ -119,10 +119,14 @@ router.post("/delete/:filename", verifyToken, async (req, res) => {
   }
 });
 
-// router.get("/", (req, res) => {
-//   console.log("ROOT HIT");
-//   res.redirect("/user/login");
-// }); // REMOVED - allow static React landing
+router.get("/", (req, res) => {
+
+  console.log("ROOT HIT");
+
+  // Always redirect to login first
+  res.redirect("/user/login");
+
+});
 
 
 

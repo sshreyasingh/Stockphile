@@ -26,17 +26,32 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 /* STATIC FIRST */
-app.use(express.static(path.join(__dirname, "../public")));
+
+
+
 
 /* ROUTERS */
-const indexRouter = require("./routes/index.routes");
-const userRouter = require("./routes/user.routes");
-const uploadRouter = require("./upload");
+
+const indexRouter =
+  require("./routes/index.routes");
+
+const userRouter =
+  require("./routes/user.routes");
+
+const uploadRouter =
+  require("./upload");
 
 /* ROUTES */
+
 app.use("/", indexRouter);
+
 app.use("/user", userRouter);
+
 app.use("/", uploadRouter);
 
-module.exports = app; 
+const staticPath =
+  path.join(__dirname, "../client");
 
+app.use(express.static(staticPath));
+
+module.exports = app;
